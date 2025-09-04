@@ -1,1 +1,138 @@
 # TIC-TAC-TOE
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe 🎮</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee);
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        color: #ff4b5c;
+        margin-bottom: 20px;
+    }
+    #gameBoard {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        gap: 5px;
+        justify-content: center;
+        margin: 20px auto;
+    }
+    .cell {
+        width: 100px;
+        height: 100px;
+        background-color: #fff;
+        border: 2px solid #ff4b5c;
+        font-size: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .cell:hover {
+        background-color: #ffd7d7;
+    }
+    #status {
+        font-size: 20px;
+        margin-top: 20px;
+        color: #333;
+    }
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: #ff4b5c;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #ff2e3c;
+    }
+</style>
+</head>
+<body>
+
+<h1>Tic Tac Toe 🎮</h1>
+
+<div id="gameBoard">
+    <div class="cell" data-index="0"></div>
+    <div class="cell" data-index="1"></div>
+    <div class="cell" data-index="2"></div>
+    <div class="cell" data-index="3"></div>
+    <div class="cell" data-index="4"></div>
+    <div class="cell" data-index="5"></div>
+    <div class="cell" data-index="6"></div>
+    <div class="cell" data-index="7"></div>
+    <div class="cell" data-index="8"></div>
+</div>
+
+<div id="status">Player X's turn</div>
+<button onclick="resetGame()">Restart Game</button>
+
+<script>
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X";
+    let gameOver = false;
+
+    const winningCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6]             // diagonals
+    ];
+
+    const cells = document.querySelectorAll(".cell");
+    const statusDiv = document.getElementById("status");
+
+    cells.forEach(cell => {
+        cell.addEventListener("click", () => {
+            const index = cell.getAttribute("data-index");
+            if (board[index] === "" && !gameOver) {
+                board[index] = currentPlayer;
+                cell.textContent = currentPlayer;
+                checkWinner();
+                if (!gameOver) {
+                    currentPlayer = currentPlayer === "X" ? "O" : "X";
+                    statusDiv.textContent = `Player ${currentPlayer}'s turn`;
+                }
+            }
+        });
+    });
+
+    function checkWinner() {
+        let winner = null;
+        winningCombos.forEach(combo => {
+            const [a, b, c] = combo;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                winner = board[a];
+            }
+        });
+
+        if (winner) {
+            statusDiv.textContent = `Player ${winner} wins! 🎉`;
+            gameOver = true;
+        } else if (!board.includes("")) {
+            statusDiv.textContent = "It's a Draw! 🤝";
+            gameOver = true;
+        }
+    }
+
+    function resetGame() {
+        board = ["", "", "", "", "", "", "", "", ""];
+        cells.forEach(cell => cell.textContent = "");
+        currentPlayer = "X";
+        gameOver = false;
+        statusDiv.textContent = "Player X's turn";
+    }
+</script>
+
+</body>
+</html>
